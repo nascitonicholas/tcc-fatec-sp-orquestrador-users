@@ -1,4 +1,4 @@
-package br.com.fatec.sp.tcc.v1.orquestradorusers;
+package br.com.fatec.sp.tcc.orquestradorusers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
