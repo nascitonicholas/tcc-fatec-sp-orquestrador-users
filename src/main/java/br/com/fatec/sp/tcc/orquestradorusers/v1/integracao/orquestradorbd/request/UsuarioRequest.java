@@ -1,4 +1,4 @@
-package br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request;
+package br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class LoginRequest {
+public class UsuarioRequest {
 
     @JsonProperty("nrMatricula")
     private String nrMatricula;

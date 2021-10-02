@@ -1,5 +1,6 @@
 package br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ public class UsuariosBdResponse {
 
     @JsonProperty("data")
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private List<UsuariosBd> responseBody = new ArrayList<>();
+    private UsuariosBd responseBody;
 
     @JsonProperty("message")
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -36,8 +37,8 @@ public class UsuariosBdResponse {
     @JsonIgnoreProperties
     public static class UsuariosBd{
 
-        @JsonProperty("id")
-        private Long id;
+        @JsonProperty("nrMatricula")
+        private String nrMatricula;
         @JsonProperty("nome")
         private String nome;
         @JsonProperty("email")
@@ -58,8 +59,9 @@ public class UsuariosBdResponse {
         private String telefone;
         @JsonProperty("celular")
         private String celular;
+        @JsonInclude(value = JsonInclude.Include.NON_NULL)
         @JsonProperty("enderecos")
-        private UsuariosEnderecoBdResponse enderecos;
+        private List<UsuariosEnderecoBdResponse> enderecos;
         @JsonProperty("curso")
         private UsuariosBdCursoResponse curso;
         @JsonProperty("turno")
