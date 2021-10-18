@@ -1,9 +1,11 @@
-package br.com.fatec.sp.tcc.v1.orquestradorusers;
+package br.com.fatec.sp.tcc.orquestradorusers;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 public class OrquestradorUsersApplication {
 
 	public static void main(String[] args) {
