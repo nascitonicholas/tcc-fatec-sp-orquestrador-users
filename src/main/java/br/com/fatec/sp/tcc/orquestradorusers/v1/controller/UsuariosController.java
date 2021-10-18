@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +26,13 @@ public class UsuariosController implements AbstractController<SaidaDefault> {
         UsuariosResponse response = usuariosFacade.login(loginRequest);
 
         return saidaSimplificada(SaidaDefault.builder().responseBody(response).message("Usuários retornados com sucesso").build(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{nrMatricula}")
+    public ResponseEntity<?> getUsuarioByNrMatricula(@PathVariable String nrMatricula){
+
+        UsuariosResponse usuario = usuariosFacade.getUsuarioByNrMatricula(nrMatricula);
+
+        return saidaSimplificada(SaidaDefault.builder().responseBody(usuario).message("Usuário já cadastrado no sistema").build(), HttpStatus.OK);
     }
 }
