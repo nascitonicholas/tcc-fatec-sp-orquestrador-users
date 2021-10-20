@@ -25,7 +25,7 @@ public class UsuariosEnderecoResponse {
     @JsonProperty("municipio")
     private String municipio;
     @JsonProperty("estado")
-    private String estado;
+    private UsuarioEstadoResponse estado;
     @JsonProperty("cep")
     private String cep;
     @JsonProperty("data_criacao")

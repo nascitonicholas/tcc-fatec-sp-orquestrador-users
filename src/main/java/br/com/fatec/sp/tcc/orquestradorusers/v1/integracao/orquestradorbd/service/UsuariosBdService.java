@@ -2,6 +2,7 @@ package br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.servi
 
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.client.UsuariosBdClient;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequest;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.response.UsuariosBdResponse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,4 +20,9 @@ public class UsuariosBdService {
     public UsuariosBd getUsuarioByNrMatricula(String nrMatricula){
         return usuariosBdClient.getUsuarioByMatricula(nrMatricula).getResponseBody();
     }
+    
+    public int cadastrar(UsuarioRequestCreate requestCreate){
+        return usuariosBdClient.cadastrar(requestCreate).hashCode();
+    }
+
 }
