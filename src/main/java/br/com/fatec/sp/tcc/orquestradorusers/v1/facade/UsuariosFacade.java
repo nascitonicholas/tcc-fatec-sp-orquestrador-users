@@ -1,11 +1,13 @@
 package br.com.fatec.sp.tcc.orquestradorusers.v1.facade;
 
 import br.com.fatec.sp.tcc.orquestradorusers.v1.config.secutiry.TokenService;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.CreateRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.LoginRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.response.UsuariosResponse;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequest;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate.*;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.service.UsuariosBdService;
-import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.response.UsuariosBdResponse.UsuariosBd;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.mapper.UsuariosMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -53,4 +54,32 @@ public class UsuariosFacade {
         }
     }
 
+    public UsuariosResponse cadastrar(CreateRequest request) {
+
+        UsuarioRequestCreate usuarioRequestCreate = new UsuarioRequestCreate();
+        List<CreateRequestUsuario> list = new ArrayList<>();
+
+        try{
+            list.add(usuariosMapper.mapCreateRequestToCreateRequestUsuario(request));
+            usuarioRequestCreate.setRequest(list);
+            usuariosBdService.cadastrar(usuarioRequestCreate);
+
+            UsuariosResponse usuariosResponse = login(getLoginRequest(request));
+
+            return usuariosResponse;
+
+        }catch (Exception e){
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao cadastrar usuário " + e.getMessage()) ;
+        }
+    }
+
+    private LoginRequest getLoginRequest(CreateRequest request) {
+
+        LoginRequest login = new LoginRequest();
+        login.setSenha(request.getSenha());
+        login.setNrMatricula(String.valueOf(request.getNrMatricula()));
+
+        return login;
+    }
 }

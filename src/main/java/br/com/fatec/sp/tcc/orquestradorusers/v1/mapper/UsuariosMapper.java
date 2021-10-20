@@ -1,8 +1,10 @@
 package br.com.fatec.sp.tcc.orquestradorusers.v1.mapper;
 
+import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.CreateRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.LoginRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.response.UsuariosResponse;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequest;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate.*;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.response.UsuariosBdResponse.UsuariosBd;
 import org.mapstruct.Mapper;
 
@@ -13,5 +15,7 @@ public interface UsuariosMapper {
 
 
     UsuariosResponse mapUsuarioBdToUsuarioResponse(UsuariosBd usuariosBd);
+
+    CreateRequestUsuario mapCreateRequestToCreateRequestUsuario(CreateRequest request);
 
 }

@@ -2,6 +2,7 @@ package br.com.fatec.sp.tcc.orquestradorusers.v1.controller;
 
 import br.com.fatec.sp.tcc.orquestradorusers.v1.config.AbstractController;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.config.SaidaDefault;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.CreateRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.LoginRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.response.UsuariosResponse;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.facade.UsuariosFacade;
@@ -32,6 +33,14 @@ public class UsuariosController implements AbstractController<SaidaDefault> {
     public ResponseEntity<?> getUsuarioByNrMatricula(@PathVariable String nrMatricula){
 
         UsuariosResponse usuario = usuariosFacade.getUsuarioByNrMatricula(nrMatricula);
+
+        return saidaSimplificada(SaidaDefault.builder().responseBody(usuario).message("Usuário já cadastrado no sistema").build(), HttpStatus.OK);
+    }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<?> cadastrar(@RequestBody @Validated CreateRequest request){
+
+        UsuariosResponse usuario = usuariosFacade.cadastrar(request);
 
         return saidaSimplificada(SaidaDefault.builder().responseBody(usuario).message("Usuário já cadastrado no sistema").build(), HttpStatus.OK);
     }
