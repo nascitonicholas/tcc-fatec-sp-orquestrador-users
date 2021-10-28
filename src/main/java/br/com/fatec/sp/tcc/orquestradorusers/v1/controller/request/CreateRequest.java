@@ -19,8 +19,17 @@ public class CreateRequest {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("email_pessoal")
+    private String emailPessoal;
+
     @JsonProperty("senha")
     private String senha;
+
+    @JsonProperty("nome_mae")
+    private String nomeMae;
+
+    @JsonProperty("nome_pai")
+    private String nomePai;
 
     @JsonProperty("cpf")
     private String cpf;

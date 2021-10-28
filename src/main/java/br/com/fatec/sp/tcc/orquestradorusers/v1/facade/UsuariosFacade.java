@@ -1,13 +1,18 @@
 package br.com.fatec.sp.tcc.orquestradorusers.v1.facade;
 
 import br.com.fatec.sp.tcc.orquestradorusers.v1.config.secutiry.TokenService;
-import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.CreateRequest;
-import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.LoginRequest;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.request.*;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.controller.response.UsuariosResponse;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioEnderecoRequestCreate;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioEnderecoRequestCreate.*;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequest;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestCreate.*;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestUpdate;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.request.UsuarioRequestUpdate.*;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.response.UsuarioBDEnderecoCreateResponse.*;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.integracao.orquestradorbd.service.UsuariosBdService;
+import br.com.fatec.sp.tcc.orquestradorusers.v1.mapper.EnderecoMapper;
 import br.com.fatec.sp.tcc.orquestradorusers.v1.mapper.UsuariosMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,8 @@ public class UsuariosFacade {
 
     private final UsuariosMapper usuariosMapper = Mappers.getMapper(UsuariosMapper.class);
 
+    private final EnderecoMapper enderecoMapper = Mappers.getMapper(EnderecoMapper.class);
+
     public UsuariosResponse login(LoginRequest request) {
 
         try {
@@ -45,10 +52,10 @@ public class UsuariosFacade {
         }
     }
 
-    public UsuariosResponse getUsuarioByNrMatricula(String nrMatricula){
-        try{
+    public UsuariosResponse getUsuarioByNrMatricula(String nrMatricula) {
+        try {
             return usuariosMapper.mapUsuarioBdToUsuarioResponse(usuariosBdService.getUsuarioByNrMatricula(nrMatricula));
-        }catch (Exception e){
+        } catch (Exception e) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
@@ -59,7 +66,7 @@ public class UsuariosFacade {
         UsuarioRequestCreate usuarioRequestCreate = new UsuarioRequestCreate();
         List<CreateRequestUsuario> list = new ArrayList<>();
 
-        try{
+        try {
             list.add(usuariosMapper.mapCreateRequestToCreateRequestUsuario(request));
             usuarioRequestCreate.setRequest(list);
             usuariosBdService.cadastrar(usuarioRequestCreate);
@@ -68,9 +75,9 @@ public class UsuariosFacade {
 
             return usuariosResponse;
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao cadastrar usuário " + e.getMessage()) ;
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao cadastrar usuário " + e.getMessage());
         }
     }
 
@@ -81,5 +88,84 @@ public class UsuariosFacade {
         login.setNrMatricula(String.valueOf(request.getNrMatricula()));
 
         return login;
+    }
+
+    public String atualizarDadosUsuario(UpdateRequest updateRequest) {
+
+        Long idEndereco = cadastrarEndereco(updateRequest.getEnderecoUpdateRequest());
+
+        UsuarioRequestUpdate usuarioRequestUpdate = new UsuarioRequestUpdate();
+        List<UpdateRequestUsuario> list = new ArrayList<>();
+
+        try {
+
+            list.add(usuariosMapper.mapUpdateRequestToUpdateRequestUsuario(updateRequest,idEndereco));
+            usuarioRequestUpdate.setUpdateRequest(list);
+
+            return usuariosBdService.atualizar(usuarioRequestUpdate);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao atualizar dados do usuário" + e.getMessage());
+        }
+
+    }
+
+    private Long cadastrarEndereco(EnderecoUpdateRequest enderecoUpdateRequest) {
+
+        try {
+
+            UsuarioEnderecoRequestCreate requestEndereco = new UsuarioEnderecoRequestCreate();
+            List<EnderecoRequestCreate> list = new ArrayList<>();
+            list.add(enderecoMapper.mapEnderecoUpdateRequestToEnderecoRequestCreate(enderecoUpdateRequest));
+            requestEndereco.setListEnderecos(list);
+
+            List<EnderecoId> responseBody = usuariosBdService.cadastrarEndereco(requestEndereco);
+
+            return responseBody.get(0).getId();
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao cadastrar novo endereço" + e.getMessage());
+        }
+
+    }
+
+    public String atualizarSenha(PasswordUpdateRequest request) {
+
+        try {
+            UsuarioRequestUpdate usuarioRequestUpdate = new UsuarioRequestUpdate();
+            List<UpdateRequestUsuario> list = new ArrayList<>();
+            list.add(usuariosMapper.mapUsuariosBdToUpdateRequestUsuario(usuariosBdService.getUsuarioByNrMatricula(String.valueOf(request.getNrMatricula())), request));
+            usuarioRequestUpdate.setUpdateRequest(list);
+
+            return usuariosBdService.atualizar(usuarioRequestUpdate);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao atualizar dados do usuário" + e.getMessage());
+        }
+    }
+
+    public UsuariosResponse atualizarEmailPessoal(EmailUpdateRequest emailUpdateRequest) {
+
+        try{
+            UsuarioRequestUpdate usuarioRequestUpdate = new UsuarioRequestUpdate();
+            List<UpdateRequestUsuario> list = new ArrayList<>();
+            list.add(usuariosMapper.mapUsuariosBdToUpdateRequestUsuario(usuariosBdService.getUsuarioByNrMatricula(String.valueOf(emailUpdateRequest.getNrMatricula())), emailUpdateRequest));
+            usuarioRequestUpdate.setUpdateRequest(list);
+
+            String atualizar = usuariosBdService.atualizar(usuarioRequestUpdate);
+
+            UsuariosResponse usuario = getUsuarioByNrMatricula(String.valueOf(emailUpdateRequest.getNrMatricula()));
+
+            return usuario;
+
+
+
+        }catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao atualizar dados do usuário" + e.getMessage());
+        }
     }
 }

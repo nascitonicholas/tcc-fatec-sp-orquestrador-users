@@ -24,22 +24,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/usuario/login").permitAll()
-                .antMatchers("/usuario/cadastrar").permitAll()
-                .antMatchers(HttpMethod.POST, "/usuario/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
-                .antMatchers(HttpMethod.GET, "/usuario/*").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new TokenFilter(tokenService,usuariosFacade), UsernamePasswordAuthenticationFilter.class);
-//                .antMatchers(HttpMethod.GET, "*").permitAll()
-//                .antMatchers(HttpMethod.POST, "*").permitAll()
-//                .antMatchers(HttpMethod.PUT, "*").permitAll()
-//                .antMatchers(HttpMethod.DELETE, "*")
-//                .permitAll()
-//                .anyRequest().permitAll()
-//                .and().cors().and().csrf().disable()
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "*").permitAll()
+                .antMatchers(HttpMethod.POST, "*").permitAll()
+                .antMatchers(HttpMethod.PUT, "*").permitAll()
+                .antMatchers(HttpMethod.DELETE, "*")
+                .permitAll()
+                .anyRequest().permitAll()
+                .and().cors().and().csrf().disable()
         ;
 
     }
