@@ -10,15 +10,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioRequestCreate {
+public class UsuarioRequestUpdate {
 
     @JsonProperty("lista_usuarios")
-    public List<CreateRequestUsuario> request;
+    public List<UpdateRequestUsuario> updateRequest;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateRequestUsuario{
+    public static class UpdateRequestUsuario{
 
         @JsonProperty("nrMatricula")
         private Long nrMatricula;
@@ -32,8 +32,11 @@ public class UsuarioRequestCreate {
         @JsonProperty("email_pessoal")
         private String emailPessoal;
 
-        @JsonProperty("senha")
-        private String senha;
+        @JsonProperty("senha_atual")
+        private String senhaAtual;
+
+        @JsonProperty("nova_senha")
+        private String novaSenha;
 
         @JsonProperty("nome_mae")
         private String nomeMae;
