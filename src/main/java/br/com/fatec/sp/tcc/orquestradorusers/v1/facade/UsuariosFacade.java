@@ -90,7 +90,7 @@ public class UsuariosFacade {
         return login;
     }
 
-    public String atualizarDadosUsuario(UpdateRequest updateRequest) {
+    public UsuariosResponse atualizarDadosUsuario(UpdateRequest updateRequest) {
 
         Long idEndereco = cadastrarEndereco(updateRequest.getEnderecoUpdateRequest());
 
@@ -99,10 +99,14 @@ public class UsuariosFacade {
 
         try {
 
-            list.add(usuariosMapper.mapUpdateRequestToUpdateRequestUsuario(updateRequest,idEndereco));
+            list.add(usuariosMapper.mapUpdateRequestToUpdateRequestUsuario(updateRequest, idEndereco));
             usuarioRequestUpdate.setUpdateRequest(list);
 
-            return usuariosBdService.atualizar(usuarioRequestUpdate);
+            String message = usuariosBdService.atualizar(usuarioRequestUpdate);
+
+            UsuariosResponse usuario = getUsuarioByNrMatricula(String.valueOf(updateRequest.getNrMatricula()));
+
+            return usuario;
 
         } catch (Exception e) {
 
@@ -149,7 +153,7 @@ public class UsuariosFacade {
 
     public UsuariosResponse atualizarEmailPessoal(EmailUpdateRequest emailUpdateRequest) {
 
-        try{
+        try {
             UsuarioRequestUpdate usuarioRequestUpdate = new UsuarioRequestUpdate();
             List<UpdateRequestUsuario> list = new ArrayList<>();
             list.add(usuariosMapper.mapUsuariosBdToUpdateRequestUsuario(usuariosBdService.getUsuarioByNrMatricula(String.valueOf(emailUpdateRequest.getNrMatricula())), emailUpdateRequest));
@@ -162,8 +166,7 @@ public class UsuariosFacade {
             return usuario;
 
 
-
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Erro ao atualizar dados do usuário" + e.getMessage());
         }

@@ -14,6 +14,8 @@ public class UsuariosEnderecoBdResponse {
 
     @JsonProperty("id")
     private Long id;
+    @JsonProperty("tipo_endereco")
+    private String tipoEndereco;
     @JsonProperty("logradouro")
     private String logradouro;
     @JsonProperty("numero")

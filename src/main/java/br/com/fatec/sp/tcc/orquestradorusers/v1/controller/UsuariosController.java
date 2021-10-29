@@ -54,9 +54,9 @@ public class UsuariosController implements AbstractController<SaidaDefault> {
     @PutMapping("/atualizarDadosUsuario")
     public ResponseEntity<?> atualizarDadosUsuario(@RequestBody @Validated UpdateRequest updateRequest){
 
-        String message = usuariosFacade.atualizarDadosUsuario(updateRequest);
+        UsuariosResponse usuario = usuariosFacade.atualizarDadosUsuario(updateRequest);
 
-        return saidaSimplificada(SaidaDefault.builder().message(message).build(), HttpStatus.OK);
+        return saidaSimplificada(SaidaDefault.builder().responseBody(usuario).message("Dados Atualizado com Sucesso").build(), HttpStatus.OK);
     }
 
     @PutMapping("/atualizarEmailPessoal")

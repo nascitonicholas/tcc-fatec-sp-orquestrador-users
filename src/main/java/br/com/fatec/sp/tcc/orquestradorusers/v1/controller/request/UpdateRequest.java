@@ -22,6 +22,9 @@ public class UpdateRequest {
     @JsonProperty("senha")
     private String senha;
 
+    @JsonProperty("email_pessoal")
+    private String emailPessoal;
+
     @JsonProperty("nome_mae")
     private String nomeMae;
 
